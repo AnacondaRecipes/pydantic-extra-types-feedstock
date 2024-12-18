@@ -1,13 +1,13 @@
 {% set name = "pydantic-extra-types" %}
-{% set version = "2.10.0" %}
+{% set version = "2.10.1" %}
 
 package:
   name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/pydantic_extra_types-{{ version }}.tar.gz
-  sha256: 552c47dd18fe1d00cfed75d9981162a2f3203cf7e77e55a3d3e70936f59587b9
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/pydantic_extra_types-{{ version }}.tar.gz
+  sha256: e4f937af34a754b8f1fa228a2fac867091a51f56ed0e8a61d5b3a6719b13c923
 
 build:
   noarch: python
@@ -16,21 +16,20 @@ build:
 
 requirements:
   host:
-    - python >=3.8
+    - python {{ python_min }}
     - hatchling
     - pip
   run:
-    - python >=3.8
+    - python >={{ python_min }}
     - pydantic >=2.5.2
   run_constrained:
     - phonenumbers >=8,<9
     - pycountry >=23
     - semver >=3.0.2,<4
-    - python-ulid >=1,<2  # [py<39]
-    - python-ulid >=1,<3  # [py>=39]
+    - python-ulid >=1,<3
     - pendulum >=3.0.0,<4.0.0
     - pytz >=2024.1
-    - tzdata >=2024.1
+    - tzdata >=2024a
 
 test:
   imports:
@@ -39,6 +38,7 @@ test:
     - pip check
   requires:
     - pip
+    - python {{ python_min }}
 
 about:
   home: https://github.com/pydantic/pydantic-extra-types
