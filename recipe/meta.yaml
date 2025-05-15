@@ -29,10 +29,9 @@ requirements:
     - pycountry >=23
     - python-ulid >=1,<2  # [py<39]
     - python-ulid >=1,<4  # [py>=39]
-    - semver >=3.0.2 
+    - semver >=3.0.2
     - pymongo >=4.0.0,<5.0.0
     - pytz >=2024.1
-    - semver >=3.0.2,<3.1.dev0
     - tzdata >=2024.1
 
 # ModuleNotFoundError: No module named 'pycountry'
@@ -56,7 +55,7 @@ test:
     - pytest
     - pip
     - pytz >=2024.1
-    - semver >=3.0.2,<3.1.dev0
+    - semver >=3.0.2
     - phonenumbers >=8,<10
     - pendulum >=3.0.0,<4.0.0
     - pymongo >=4.0.0,<5.0.0
