@@ -1,5 +1,5 @@
 {% set name = "pydantic-extra-types" %}
-{% set version = "2.10.4" %}
+{% set version = "2.10.5" %}
 
 package:
   name: {{ name|lower }}
@@ -7,18 +7,18 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
-  sha256: bf8236a63d061eb3ecb1b2afa78ba0f97e3f67aa11dbbff56ec90491e8772edc
+  sha256: 1dcfa2c0cf741a422f088e0dbb4690e7bfadaaf050da3d6f80d6c3cf58a2bad8
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: True  # [py<38]
+  skip: true  # [py<38]
 
 requirements:
   host:
     - python
-    - hatchling
     - pip
+    - hatchling
   run:
     - python
     - pydantic >=2.5.2
@@ -29,19 +29,10 @@ requirements:
     - pycountry >=23
     - python-ulid >=1,<2  # [py<39]
     - python-ulid >=1,<4  # [py>=39]
-    - semver >=3.0.2
+    - semver >=3.0.2,<3.1.dev0
     - pymongo >=4.0.0,<5.0.0
     - pytz >=2024.1
-    - tzdata >=2024.1
-
-# ModuleNotFoundError: No module named 'pycountry'
-{% set ignore_tests = " --ignore=tests/test_country_code.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/test_currency_code.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/test_json_schema.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/test_language_codes.py" %}
-{% set ignore_tests = ignore_tests + " --ignore=tests/test_scripts.py" %}
-# ModuleNotFoundError: No module named 'ulid'
-{% set ignore_tests = ignore_tests + " --ignore=tests/test_ulid.py" %}
+    - python-tzdata >=2024.1
 
 test:
   source_files:
@@ -50,15 +41,17 @@ test:
     - pydantic_extra_types
   commands:
     - pip check
-    - pytest -v {{ ignore_tests }} tests
+    # missing python-ulid
+    - pytest -v --ignore=tests/test_ulid.py --ignore=tests/test_json_schema.py tests
   requires:
     - pytest
     - pip
-    - pytz >=2024.1
-    - semver >=3.0.2
-    - phonenumbers >=8,<10
-    - pendulum >=3.0.0,<4.0.0
-    - pymongo >=4.0.0,<5.0.0
+    - pytz
+    - semver
+    - phonenumbers
+    - pendulum
+    - pymongo
+    - pycountry
 
 about:
   home: https://github.com/pydantic/pydantic-extra-types
@@ -67,7 +60,7 @@ about:
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  description: A place for pydantic types that probably shouldn't exist in the main pydantic lib.
+  description: "A place for pydantic types that probably shouldn't exist in the main pydantic lib."
   doc_url: https://docs.pydantic.dev
 
 extra:
