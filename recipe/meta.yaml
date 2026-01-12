@@ -1,5 +1,5 @@
 {% set name = "pydantic-extra-types" %}
-{% set version = "2.10.5" %}
+{% set version = "2.11.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,12 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
-  sha256: 1dcfa2c0cf741a422f088e0dbb4690e7bfadaaf050da3d6f80d6c3cf58a2bad8
+  sha256: 4e9991959d045b75feb775683437a97991d02c138e00b59176571db9ce634f0e
 
 build:
-  number: 1
+  number: 0
   script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  skip: true  # [py<38]
+  skip: true  # [py<39]
 
 requirements:
   host:
@@ -29,10 +29,12 @@ requirements:
     - pycountry >=23
     - python-ulid >=1,<2  # [py<39]
     - python-ulid >=1,<4  # [py>=39]
-    - semver >=3.0.2,<3.1.dev0
+    - semver >=3.0.2,<3.1.0
     - pymongo >=4.0.0,<5.0.0
     - pytz >=2024.1
     - python-tzdata >=2024.1
+    - tzdata >=2024.1
+    - cron-converter >=1.2.2"
 
 test:
   source_files:
@@ -59,13 +61,13 @@ test:
 
 about:
   home: https://github.com/pydantic/pydantic-extra-types
-  summary: Extra Pydantic types.
   dev_url: https://github.com/pydantic/pydantic-extra-types
+  doc_url: https://docs.pydantic.dev
+  summary: Extra Pydantic types.
+  description: A place for pydantic types that probably shouldn't exist in the main pydantic lib.
   license: MIT
   license_family: MIT
   license_file: LICENSE
-  description: "A place for pydantic types that probably shouldn't exist in the main pydantic lib."
-  doc_url: https://docs.pydantic.dev
 
 extra:
   recipe-maintainers:
