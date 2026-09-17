@@ -1,5 +1,5 @@
 {% set name = "pydantic-extra-types" %}
-{% set version = "2.11.1" %}
+{% set version = "2.11.2" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name.replace('-', '_')}}-{{ version }}.tar.gz
-  sha256: 46792d2307383859e923d8fcefa82108b1a141f8a9c0198982b3832ab5ef1049
+  sha256: 3a2b83b61fe920925688e7838b59caa90a45637d1dbba2b1364b8d1f7ff72a0a
 
 build:
   number: 0
@@ -29,12 +29,19 @@ requirements:
     - pycountry >=23
     - python-ulid >=1,<2  # [py<39]
     - python-ulid >=1,<4  # [py>=39]
-    - semver >=3.0.2,<3.1.dev0
+    - semver >=3.0.2,<3.1.0
     - pymongo >=4.0.0,<5.0.0
     - pytz >=2024.1
     - python-tzdata >=2024.1
     - tzdata >=2024.1
     - cron-converter >=1.2.2
+    - jsonschema >=4.0.0
+    - uuid-utils  # [py<314]
+
+{% set tests_to_ignore = "--ignore=tests/test_ulid.py" %}  # missing python-ulid
+{% set tests_to_ignore = tests_to_ignore + " --ignore=tests/test_json_schema.py" %}  # cron-converter / schema extras
+{% set tests_to_ignore = tests_to_ignore + " --ignore=tests/test_cron.py" %}  # requires cron-converter
+{% set tests_to_ignore = tests_to_ignore + " --deselect=tests/test_coordinate.py::test_json_schema" %}  # schema shape vs pydantic on main
 
 test:
   source_files:
@@ -51,15 +58,12 @@ test:
     - pendulum  # [py<314]
     - pymongo
     - pycountry
-    - uuid-utils  # UUID v7 generation on Python < 3.14
+    - uuid-utils  # [py<314]
   commands:
     - pip check
-    # 1. missing python-ulid
-    # 2. test_json_schema and test_cron are skipped because cron-converter isn't available on the main channel.
-    # 3. test_coordinate::test_json_schema asserts a schema shape that current pydantic on main does not match
-    - pytest -v --ignore=tests/test_ulid.py --ignore=tests/test_json_schema.py --ignore=tests/test_cron.py --deselect=tests/test_coordinate.py::test_json_schema tests  # [py<314]
-    # test_pendulum_dt is skipped because it fails on py314 due to pendulum 3.1.0 not supporting py314.
-    - pytest -v --ignore=tests/test_ulid.py --ignore=tests/test_json_schema.py --ignore=tests/test_cron.py --ignore=tests/test_pendulum_dt.py --deselect=tests/test_coordinate.py::test_json_schema tests  # [py==314]
+    - pytest -v {{ tests_to_ignore }} tests  # [py<314]
+    # pendulum 3.1.0 doesn't support py314
+    - pytest -v {{ tests_to_ignore }} --ignore=tests/test_pendulum_dt.py tests  # [py==314]
 
 about:
   home: https://github.com/pydantic/pydantic-extra-types
