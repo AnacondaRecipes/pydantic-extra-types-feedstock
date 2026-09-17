@@ -59,6 +59,8 @@ test:
     - pymongo
     - pycountry
     - uuid-utils  # [py<314]
+    # extra == "jsonschema"; tests/test_json_schema_type.py imports JsonSchema at collection
+    - jsonschema >=4.0.0
   commands:
     - pip check
     - pytest -v {{ tests_to_ignore }} tests  # [py<314]
